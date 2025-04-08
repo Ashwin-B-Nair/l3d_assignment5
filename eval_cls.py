@@ -105,7 +105,7 @@ if __name__ == '__main__':
         if test_label[i] != pred_label[i]:
             incorrect_labels.append(i)
     
-    print("Incorrect labels: ", incorrect_labels)
+    # print("Incorrect labels: ", incorrect_labels)
     
     
 #test accuracy: 0.974816369359916
