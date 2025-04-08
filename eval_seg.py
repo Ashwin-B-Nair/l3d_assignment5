@@ -61,9 +61,11 @@ if __name__ == '__main__':
     for i in tqdm(range(num_batch)):
         output = model(test_data[i*n: (i+1)*n].to(args.device))
         prediction = output.max(dim=1)[1]
+        print(prediction.shape)
+        print(prediction)
         pred_label[i*n: (i+1)*n, :] = prediction
 
-    print(prediction.shape)
+    
     print(pred_label.shape)
     pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.reshape((-1,1)).size()[0])
