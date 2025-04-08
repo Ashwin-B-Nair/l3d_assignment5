@@ -69,6 +69,7 @@ if __name__ == '__main__':
     # pred_label = output.max(dim=1)[1]
 
     # Compute Accuracy
+    pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.size()[0])
     print ("test accuracy: {}".format(test_accuracy))
 
