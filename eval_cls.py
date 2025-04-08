@@ -23,7 +23,8 @@ def create_parser():
     parser.add_argument('--output_dir', type=str, default='./output')
 
     parser.add_argument('--exp_name', type=str, default="exp", help='The name of the experiment')
-
+    parser.add_argument('--batch_size', type=int, default=32)
+    
     return parser
 
 
