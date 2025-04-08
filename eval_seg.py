@@ -70,15 +70,13 @@ if __name__ == '__main__':
     viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
     
-     #Finding out which labels were incorrect
-    test_label = test_label.cpu().numpy()
-    pred_label = pred_label.cpu().numpy()
-
-    incorrect_labels = []
-    for i in range(len(test_label)):
-        if test_label[i] != pred_label[i]:
-            incorrect_labels.append(i)
+    #Finding out which samples have low accuracy
+    low_accuracy_labels = []
+    for idx in tqdm(range(len(test_label))):
+        test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
+        if test_accuracy < 0.6:
+            low_accuracy_labels.append(idx)
     
-    print("Incorrect labels: ", incorrect_labels)
+     
     
     
