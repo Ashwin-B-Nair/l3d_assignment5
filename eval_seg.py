@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # ------ TO DO: Make Prediction ------
     print(test_data.shape[0])
-    n = 32
+    n = 20
     num_batch = (test_data.shape[0] // n)+1
     pred_label = []
     
