@@ -90,9 +90,9 @@ if __name__ == '__main__':
         for idx in tqdm(range(len(test_label))):
             test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
             if test_accuracy < 0.6:
-                accuracy.append((idx, test_accuracy))
+                low_f.write(f"{idx}\t{test_accuracy:.4f}\n")
             elif test_accuracy > 0.9:
-                high_f.write(f"{idx}\t{accuracy:.4f}\n")
+                high_f.write(f"{idx}\t{test_accuracy:.4f}\n")
                 
     print(f"Saved low accuracy samples to: {low_acc_file}")
     print(f"Saved high accuracy samples to: {high_acc_file}")
