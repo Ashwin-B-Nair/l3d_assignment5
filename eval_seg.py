@@ -7,6 +7,8 @@ from data_loader import get_data_loader
 from utils import create_dir, viz_seg
 from tqdm import tqdm
 import os
+from pytorch3d.transforms import Rotate, axis_angle_to_matrix
+
 
 def create_parser():
     """Creates a parser for command-line arguments.
@@ -28,6 +30,16 @@ def create_parser():
 
     return parser
 
+def rotate_point_cloud(batch_tensor, angle_degrees=45, axis='y'):
+    angle_rad = torch.tensor(angle_degrees * np.pi / 180.0)
+    axis_map = {'x': torch.tensor([1, 0, 0]),
+                'y': torch.tensor([0, 1, 0]),
+                'z': torch.tensor([0, 0, 1])}
+    
+    axis_vector = axis_map[axis].float()
+    axis_angle = angle_rad * axis_vector  
+    R = axis_angle_to_matrix(axis_angle)  
+    return torch.matmul(batch_tensor, R.T)
 
 if __name__ == '__main__':
     parser = create_parser()
@@ -53,6 +65,9 @@ if __name__ == '__main__':
     test_data = torch.from_numpy((np.load(args.test_data))[:,ind,:])
     test_label = torch.from_numpy((np.load(args.test_label))[:,ind])
 
+    #Rotate point cloud
+    test_data = rotate_point_cloud(test_data, angle_degrees=45, axis='x')
+    
     # ------ TO DO: Make Prediction ------
     print(test_data.shape[0])
     n = 20
