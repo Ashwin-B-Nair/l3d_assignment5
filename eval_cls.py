@@ -23,7 +23,7 @@ def create_parser():
     parser.add_argument('--output_dir', type=str, default='./output')
 
     parser.add_argument('--exp_name', type=str, default="exp", help='The name of the experiment')
-    parser.add_argument('--batch_size', type=int, default=32)
+    
     
     return parser
 
@@ -55,14 +55,14 @@ if __name__ == '__main__':
     # ------ TO DO: Make Prediction ------
     # test_data = test_data.to(args.device).float()
     # test_label = test_label.to(args.device).long()
-    batch_size = args.batch_size
-    num_batch = (test_data.shape[0] // batch_size)+1
+    
+    num_batch = (test_data.shape[0] // 40)+1
     pred_label = []
     
     for i in tqdm(range(num_batch)):
-        output = model(test_data[i*batch_size: (i+1)*batch_size].to(args.device))
-        prediction = output.max(dim=1)[1]
-        prediction = list(prediction)
+        output = model(test_data[i*40: (i+1)*40].to(args.device))
+        prediction = list(output.max(dim=1)[1])
+        # prediction = list(prediction)
         pred_label.extend(prediction)
         
     # output = model(test_data).to(args.device)
@@ -88,3 +88,8 @@ if __name__ == '__main__':
             incorrect_labels.append(i)
     
     print("Incorrect labels: ", incorrect_labels)
+    
+    
+#test accuracy: 0.974816369359916
+# Creating Visualizer
+# Incorrect labels:  [406, 619, 621, 631, 651, 664, 670, 671, 673, 685, 690, 699, 707, 708, 714, 716, 750, 777, 787, 827, 859, 864, 916, 922]
