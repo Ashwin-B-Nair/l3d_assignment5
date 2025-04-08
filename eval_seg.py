@@ -79,18 +79,23 @@ if __name__ == '__main__':
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
     
     #Finding out which samples have low accuracy
-    output_file = os.path.join(args.output_dir, f"low_accuracy_{args.exp_name}.txt")
-    low_accuracy_labels = []
+    low_acc_file = os.path.join(args.output_dir, f"low_accuracy_{args.exp_name}.txt")
+    high_acc_file = os.path.join(args.output_dir, f"high_accuracy_{args.exp_name}.txt")
+    accuracy = []
     
-    with open(output_file, "w") as f:
-        f.write("Index\tAccuracy\n")  # Header
+    with open(low_acc_file, "w") as low_f, open(high_acc_file, "w") as high_f:
+        low_f.write("Index\tAccuracy\n")
+        high_f.write("Index\tAccuracy\n")
+
         for idx in tqdm(range(len(test_label))):
             test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
             if test_accuracy < 0.6:
-                low_accuracy_labels.append((idx, test_accuracy))
-                f.write(f"{idx}\t{test_accuracy:.4f}\n")
+                accuracy.append((idx, test_accuracy))
+            elif accuracy > 0.9:
+                high_f.write(f"{idx}\t{accuracy:.4f}\n")
                 
-    print(f"Saved low accuracy samples to: {output_file}")
+    print(f"Saved low accuracy samples to: {low_acc_file}")
+    print(f"Saved high accuracy samples to: {high_acc_file}")
                 
     
     
