@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
 
     # Sample Points per Object
-    ind = np.random.choice(10000,args.num_points, replace=False)
+    ind = np.random.choice(100000,args.num_points, replace=False)
     test_data = torch.from_numpy((np.load(args.test_data))[:,ind,:])
     test_label = torch.from_numpy(np.load(args.test_label))
 
