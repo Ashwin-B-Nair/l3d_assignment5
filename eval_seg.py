@@ -60,7 +60,8 @@ if __name__ == '__main__':
     print(pred_label.shape)
     for i in tqdm(range(num_batch)):
         output = model(test_data[i*n: (i+1)*n].to(args.device))
-        prediction = output.max(dim=1)[1]
+        # prediction = output.max(dim=1)[1]
+        prediction = torch.argmax(output, -1, keepdim=False).cpu()
         print(prediction.shape)
         print(prediction)
         pred_label[i*n: (i+1)*n, :] = prediction
