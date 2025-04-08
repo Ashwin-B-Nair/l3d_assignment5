@@ -118,3 +118,6 @@ if __name__ == '__main__':
     #q3 - rotate
     #test accuracy: 0.6465753646677471
     
+    #q3- num_points
+    #test accuracy: 0.8839967585089141
+    
