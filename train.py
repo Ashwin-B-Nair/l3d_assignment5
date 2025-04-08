@@ -6,7 +6,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from models import cls_model, seg_model
 from data_loader import get_data_loader
-from utils import save_checkpoint, create_dir
+from utils import save_checkpoint, create_dir, viz_seg
 
 def train(train_dataloader, model, opt, epoch, args, writer):
     
@@ -185,3 +185,4 @@ if __name__ == '__main__':
     args.checkpoint_dir = args.checkpoint_dir+"/"+args.task # checkpoint directory is task specific
 
     main(args)
+    
