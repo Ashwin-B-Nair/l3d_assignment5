@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # ------ TO DO: Make Prediction ------
     test_data = test_data.to(args.device).float()
     test_label = test_label.to(args.device).long()
-    output = model(test_data)
+    output = model(test_data).to(args.device)
     pred_label = output.max(dim=1)[1]
 
     # Compute Accuracy
