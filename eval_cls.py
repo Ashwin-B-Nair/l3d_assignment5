@@ -62,19 +62,20 @@ if __name__ == '__main__':
     for i in tqdm(range(num_batch)):
         output = model(test_data[i*40: (i+1)*40].to(args.device))
         prediction = list(output.max(dim=1)[1])
-        # prediction = list(prediction)
         pred_label.extend(prediction)
         
     # output = model(test_data).to(args.device)
     # pred_label = output.max(dim=1)[1]
     # test_label = test_label.cpu()
+    
     # Compute Accuracy
     pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.size()[0])
     print ("test accuracy: {}".format(test_accuracy))
     # test_label = test_label.to(args.device).long()
+    
     # Visualize Classification Result (Pred VS Ground Truth)
-    print("Creating Visualizer")
+    print("Creating Visualization")
     viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
 

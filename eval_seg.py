@@ -5,7 +5,7 @@ import torch
 from models import seg_model
 from data_loader import get_data_loader
 from utils import create_dir, viz_seg
-
+import tqdm as tqdm
 
 def create_parser():
     """Creates a parser for command-line arguments.
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     create_dir(args.output_dir)
 
     # ------ TO DO: Initialize Model for Segmentation Task  ------
-    model = 
+    model = seg_model(num_seg_classes=args.num_seg_class).to(args.device)
     
     # Load Model Checkpoint
     model_path = './checkpoints/seg/{}.pt'.format(args.load_checkpoint)
@@ -53,11 +53,32 @@ if __name__ == '__main__':
     test_label = torch.from_numpy((np.load(args.test_label))[:,ind])
 
     # ------ TO DO: Make Prediction ------
-    pred_label = 
+    num_batch = (test_data.shape[0] // 40)+1
+    pred_label = []
+    
+    for i in tqdm(range(num_batch)):
+        output = model(test_data[i*40: (i+1)*40].to(args.device))
+        prediction = list(output.max(dim=1)[1])
+        pred_label.extend(prediction)
 
+    pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.reshape((-1,1)).size()[0])
     print ("test accuracy: {}".format(test_accuracy))
 
     # Visualize Segmentation Result (Pred VS Ground Truth)
-    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}.gif".format(args.output_dir, args.exp_name), args.device)
-    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}.gif".format(args.output_dir, args.exp_name), args.device)
+    print("Creating Visualization")
+    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
+    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
+    
+     #Finding out which labels were incorrect
+    test_label = test_label.cpu().numpy()
+    pred_label = pred_label.cpu().numpy()
+
+    incorrect_labels = []
+    for i in range(len(test_label)):
+        if test_label[i] != pred_label[i]:
+            incorrect_labels.append(i)
+    
+    print("Incorrect labels: ", incorrect_labels)
+    
+    
