@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # ------ TO DO: Make Prediction ------
     test_data = test_data.to(args.device).float()
-    test_label = test_label.cpu().long()
+    test_label = test_label.to(args.device).long()
     batch_size = args.batch_size
     num_batch = (test_data.shape[0] // batch_size)+1
     pred_label = []
@@ -70,7 +70,7 @@ if __name__ == '__main__':
 
     # Compute Accuracy
     pred_label = torch.Tensor(pred_label).cpu()
-    test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.size()[0])
+    test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.cpu().size()[0])
     print ("test accuracy: {}".format(test_accuracy))
 
     # Visualize Classification Result (Pred VS Ground Truth)
