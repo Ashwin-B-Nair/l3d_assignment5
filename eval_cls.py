@@ -59,7 +59,7 @@ if __name__ == '__main__':
     num_batch = (test_data.shape[0] // batch_size)+1
     pred_label = []
     
-    for i in tqdm(range(len(num_batch))):
+    for i in tqdm(range(num_batch)):
         output = model(test_data[i*batch_size: (i+1)*batch_size].to(args.device))
         prediction = output.max(dim=1)[1]
         prediction = list(prediction)
