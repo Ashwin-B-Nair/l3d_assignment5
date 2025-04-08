@@ -6,6 +6,7 @@ from models import seg_model
 from data_loader import get_data_loader
 from utils import create_dir, viz_seg
 from tqdm import tqdm
+import os
 
 def create_parser():
     """Creates a parser for command-line arguments.
@@ -78,11 +79,20 @@ if __name__ == '__main__':
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
     
     #Finding out which samples have low accuracy
+    output_file = os.path.join(args.output_dir, f"low_accuracy_{args.exp_name}.txt")
     low_accuracy_labels = []
-    for idx in tqdm(range(len(test_label))):
-        test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
-        if test_accuracy < 0.6:
-            low_accuracy_labels.append(idx)
+    
+    with open(output_file, "w") as f:
+        f.write("Index\tAccuracy\n")  # Header
+        for idx in tqdm(range(len(test_label))):
+            test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
+            if test_accuracy < 0.6:
+                low_accuracy_labels.append((idx, test_accuracy))
+                f.write(f"{idx}\t{test_accuracy:.4f}\n")
+                
+    print(f"Saved low accuracy samples to: {output_file}")
+                
+    
     
      
     
