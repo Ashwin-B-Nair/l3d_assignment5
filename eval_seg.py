@@ -53,11 +53,13 @@ if __name__ == '__main__':
     test_label = torch.from_numpy((np.load(args.test_label))[:,ind])
 
     # ------ TO DO: Make Prediction ------
-    num_batch = (test_data.shape[0] // 50)+1
+    print(test_data.shape[0])
+    n = 50
+    num_batch = (test_data.shape[0] // n)+1
     pred_label = []
     
     for i in tqdm(range(num_batch)):
-        output = model(test_data[i*50: (i+1)*50].to(args.device))
+        output = model(test_data[i*n: (i+1)*n].to(args.device))
         prediction = list(output.max(dim=1)[1])
         pred_label.extend(prediction)
 
