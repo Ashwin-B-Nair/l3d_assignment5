@@ -100,9 +100,9 @@ def main(args):
 
     # ------ TO DO: Initialize Model ------
     if args.task == "cls":
-        model = cls_model().to(args.device)
+        model = cls_model(num_classes=3).to(args.device)
     else:
-        model = 
+        model = seg_model(num_seg_classes=args.num_seg_class).to(args.device)
     
     # Load Checkpoint 
     if args.load_checkpoint:
