@@ -90,8 +90,8 @@ if __name__ == '__main__':
 
     # Visualize Segmentation Result (Pred VS Ground Truth)
     print("Creating Visualization")
-    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
-    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
+    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device, args.points)
+    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device, args.points)
     
     #Finding out which samples have low accuracy
     low_acc_file = os.path.join(args.output_dir, f"low_accuracy_{args.exp_name}.txt")
