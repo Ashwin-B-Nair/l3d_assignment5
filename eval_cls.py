@@ -78,3 +78,13 @@ if __name__ == '__main__':
     viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.idx), args.device)
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.idx), args.device)
 
+    #Finding out which labels were incorrect
+    test_label = test_label.cpu().numpy()
+    pred_label = pred_label.cpu().numpy()
+
+    incorrect_labels = []
+    for i in range(len(test_label)):
+        if test_label[i] != pred_label[i]:
+            incorrect_labels.append(i)
+    
+    print("Incorrect labels: ", incorrect_labels)
