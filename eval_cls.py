@@ -67,7 +67,7 @@ if __name__ == '__main__':
     test_label = torch.from_numpy(np.load(args.test_label))
 
     #Rotate point cloud
-    test_data = rotate_point_cloud(test_data, angle_degrees=45, axis='x')
+    # test_data = rotate_point_cloud(test_data, angle_degrees=45, axis='x')
     
     # ------ TO DO: Make Prediction ------
     # test_data = test_data.to(args.device).float()
