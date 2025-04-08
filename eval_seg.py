@@ -56,13 +56,15 @@ if __name__ == '__main__':
     print(test_data.shape[0])
     n = 20
     num_batch = (test_data.shape[0] // n)+1
-    pred_label = []
+    pred_label = torch.ones_like(test_label)
     
     for i in tqdm(range(num_batch)):
         output = model(test_data[i*n: (i+1)*n].to(args.device))
-        prediction = list(output.max(dim=1)[1])
-        pred_label.extend(prediction)
+        prediction = output.max(dim=1)[1]
+        pred_label[i*n: (i+1)*n, :] = prediction
 
+    print(prediction.shape)
+    print(pred_label.shape)
     pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.reshape((-1,1)).size()[0])
     print ("test accuracy: {}".format(test_accuracy))
