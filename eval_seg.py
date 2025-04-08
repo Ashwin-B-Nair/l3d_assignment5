@@ -5,7 +5,7 @@ import torch
 from models import seg_model
 from data_loader import get_data_loader
 from utils import create_dir, viz_seg
-import tqdm as tqdm
+from tqdm import tqdm
 
 def create_parser():
     """Creates a parser for command-line arguments.
