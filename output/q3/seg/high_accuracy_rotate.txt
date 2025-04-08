@@ -1,0 +1,2 @@
+Index	Accuracy
+585	0.9199
