@@ -75,8 +75,8 @@ if __name__ == '__main__':
     # test_label = test_label.to(args.device).long()
     # Visualize Classification Result (Pred VS Ground Truth)
     print("Creating Visualizer")
-    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.idx), args.device)
-    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.idx), args.device)
+    viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
+    viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}_{}.gif".format(args.output_dir, args.exp_name, args.i), args.device)
 
     #Finding out which labels were incorrect
     test_label = test_label.cpu().numpy()
