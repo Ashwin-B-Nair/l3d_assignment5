@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     # ------ TO DO: Make Prediction ------
     test_data = test_data.to(args.device).float()
-    test_label = test_label.to(args.device).long()
+    test_label = test_label.cpu().long()
     batch_size = args.batch_size
     num_batch = (test_data.shape[0] // batch_size)+1
     pred_label = []
