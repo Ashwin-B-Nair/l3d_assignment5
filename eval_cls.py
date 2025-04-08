@@ -4,6 +4,7 @@ import argparse
 import torch
 from models import cls_model
 from utils import create_dir, viz_seg
+from tqdm import tqdm
 
 def create_parser():
     """Creates a parser for command-line arguments.
@@ -53,14 +54,25 @@ if __name__ == '__main__':
     # ------ TO DO: Make Prediction ------
     test_data = test_data.to(args.device).float()
     test_label = test_label.to(args.device).long()
-    output = model(test_data).to(args.device)
-    pred_label = output.max(dim=1)[1]
+    batch_size = args.batch_size
+    num_batch = (test_data.shape[0] // batch_size)+1
+    pred_label = []
+    
+    for i in tqdm(range(len(num_batch))):
+        output = model(test_data[i*batch_size: (i+1)*batch_size].to(args.device))
+        prediction = output.max(dim=1)[1]
+        prediction = list(prediction)
+        pred_label.extend(prediction)
+        
+    # output = model(test_data).to(args.device)
+    # pred_label = output.max(dim=1)[1]
 
     # Compute Accuracy
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.size()[0])
     print ("test accuracy: {}".format(test_accuracy))
 
     # Visualize Classification Result (Pred VS Ground Truth)
+    
     viz_seg(test_data[args.i], test_label[args.i], "{}/gt_{}.gif".format(args.output_dir, args.exp_name), args.device)
     viz_seg(test_data[args.i], pred_label[args.i], "{}/pred_{}.gif".format(args.output_dir, args.exp_name), args.device)
 

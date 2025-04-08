@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import torch
 import pytorch3d
 from pytorch3d.renderer import (
