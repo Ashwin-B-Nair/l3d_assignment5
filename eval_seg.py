@@ -106,7 +106,7 @@ if __name__ == '__main__':
             test_accuracy = pred_label[idx].eq(test_label[idx].data).cpu().sum().item() / (test_label[idx].reshape((-1,1)).size()[0])
             if test_accuracy < 0.6:
                 low_f.write(f"{idx}\t{test_accuracy:.4f}\n")
-            elif test_accuracy > 0.9:
+            elif test_accuracy > 0.6:
                 high_f.write(f"{idx}\t{test_accuracy:.4f}\n")
                 
     print(f"Saved low accuracy samples to: {low_acc_file}")
