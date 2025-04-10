@@ -26,15 +26,15 @@ class cls_model(nn.Module):
                 , where B is batch size and N is the number of points per object (N=10000 by default)
         output: tensor of size (B, num_classes)
         '''
-        x = points.transpose(2, 1)           # (B, 3, N)
-        x = F.relu(self.bn1(self.conv1(x)))  # (B, 64, N)
-        x = F.relu(self.bn2(self.conv2(x)))  # (B, 128, N)
-        x = F.relu(self.bn3(self.conv3(x)))  # (B, 1024, N)
-        x = torch.max(x, 2)[0]  # Max pooling over points: (B, 1024)
+        x = points.transpose(2, 1)           
+        x = F.relu(self.bn1(self.conv1(x)))  
+        x = F.relu(self.bn2(self.conv2(x)))  
+        x = F.relu(self.bn3(self.conv3(x)))  
+        x = torch.max(x, 2)[0]  
 
-        x = F.relu(self.bn4(self.fc1(x)))  # (B, 512)
-        x = F.relu(self.bn5(self.dropout(self.fc2(x))))  # (B, 256)
-        x = self.fc3(x)  # (B, num_classes)
+        x = F.relu(self.bn4(self.fc1(x))) 
+        x = F.relu(self.bn5(self.dropout(self.fc2(x)))) 
+        x = self.fc3(x)  
         out = F.log_softmax(x, dim=1)
         
         return out
@@ -52,7 +52,6 @@ class seg_model(nn.Module):
         self.bn2 = nn.BatchNorm1d(128)
         self.bn3 = nn.BatchNorm1d(1024)
 
-        # Point feature + global feature -> final segmentation MLP
         self.conv4 = nn.Conv1d(1088, 512, 1)
         self.conv5 = nn.Conv1d(512, 256, 1)
         self.conv6 = nn.Conv1d(256, num_seg_classes, 1)
@@ -67,21 +66,18 @@ class seg_model(nn.Module):
         output: tensor of size (B, N, num_seg_classes)
         '''
         x = points.transpose(2, 1)  
-        x1 = F.relu(self.bn1(self.conv1(x)))     # (B, 64, N)
-        x2 = F.relu(self.bn2(self.conv2(x1)))    # (B, 128, N)
-        x3 = F.relu(self.bn3(self.conv3(x2)))    # (B, 1024, N)
+        x1 = F.relu(self.bn1(self.conv1(x)))     
+        x2 = F.relu(self.bn2(self.conv2(x1)))    
+        x3 = F.relu(self.bn3(self.conv3(x2)))    
+       
+        global_feat = torch.max(x3, 2, keepdim=True)[0]  
+        global_feat = global_feat.repeat(1, 1, x.size(2))  
 
-        # Global max pooling
-        global_feat = torch.max(x3, 2, keepdim=True)[0]  # (B, 1024, 1)
-        global_feat = global_feat.repeat(1, 1, x.size(2))  # (B, 1024, N)
-
-        # Concatenate global + point features
-        concat_feat = torch.cat([x1, global_feat], 1)  # (B, 64+1024=1088, N)
-
-        # MLP head for segmentation
-        x = F.relu(self.bn4(self.conv4(concat_feat)))  # (B, 512, N)
-        x = F.relu(self.bn5(self.dropout(self.conv5(x))))  # (B, 256, N)
-        x = self.conv6(x)  # (B, num_seg_classes, N)
+        concat_feat = torch.cat([x1, global_feat], 1)  
+        
+        x = F.relu(self.bn4(self.conv4(concat_feat)))  
+        x = F.relu(self.bn5(self.dropout(self.conv5(x))))  
+        x = self.conv6(x)  
         out = x.transpose(2, 1).contiguous()
         
         return out

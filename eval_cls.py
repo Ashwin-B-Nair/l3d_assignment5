@@ -70,9 +70,7 @@ if __name__ == '__main__':
     # test_data = rotate_point_cloud(test_data, angle_degrees=45, axis='x')
     
     # ------ TO DO: Make Prediction ------
-    # test_data = test_data.to(args.device).float()
-    # test_label = test_label.to(args.device).long()
-    
+     
     num_batch = (test_data.shape[0] // 40)+1
     pred_label = []
     
@@ -81,15 +79,10 @@ if __name__ == '__main__':
         prediction = list(output.max(dim=1)[1])
         pred_label.extend(prediction)
         
-    # output = model(test_data).to(args.device)
-    # pred_label = output.max(dim=1)[1]
-    # test_label = test_label.cpu()
-    
     # Compute Accuracy
     pred_label = torch.Tensor(pred_label).cpu()
     test_accuracy = pred_label.eq(test_label.data).cpu().sum().item() / (test_label.size()[0])
     print ("test accuracy: {}".format(test_accuracy))
-    # test_label = test_label.to(args.device).long()
     
     # Visualize Classification Result (Pred VS Ground Truth)
     print("Creating Visualization")

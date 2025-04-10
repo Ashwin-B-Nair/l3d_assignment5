@@ -73,13 +73,9 @@ if __name__ == '__main__':
     n = 20
     num_batch = (test_data.shape[0] // n)+1
     pred_label = torch.ones_like(test_label)
-    # print(pred_label.shape)
     for i in tqdm(range(num_batch)):
         output = model(test_data[i*n: (i+1)*n].to(args.device))
         prediction = output.max(dim=2)[1]
-        # prediction = torch.argmax(output, -1).cpu()
-        # print(prediction.shape)
-        # print(prediction)
         pred_label[i*n: (i+1)*n, :] = prediction
 
     
